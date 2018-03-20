@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import classes from 'BurgerBuilder.css';
+import classes from './BurgerIngridients.css';
 
 class BurgerIngridient extends Component {
 
@@ -43,7 +43,7 @@ class BurgerIngridient extends Component {
 }
 
 BurgerIngridient.propTypes = {
-  type: PropsTypes.string.isRequired
+  type: PropTypes.string.isRequired
 }
 
 export default BurgerIngridient;
