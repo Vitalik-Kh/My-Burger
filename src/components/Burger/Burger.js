@@ -11,7 +11,6 @@ const burger = (props) => {
           return <BurgerIngridients key={ingrKey + i} type={ingrKey}/>
         });
     }).reduce((acc, curr) => {return acc.concat(curr)}, []);
-  console.log(transformedIngridients);
 
   if (transformedIngridients.length === 0) {
     transformedIngridients = 'Please choose ingridients you like';
