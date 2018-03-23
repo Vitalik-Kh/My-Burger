@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Aux from '../../../hoc/auxi';
+import Button from '../../UI/Button/Button';
 
 const orderSummery = (props) => {
   const ingridientsList = Object.keys(props.ingridients)
@@ -18,6 +19,8 @@ const orderSummery = (props) => {
       <ul>
         {ingridientsList}
       </ul>
+      <Button type='Success'>Checkout</Button>
+      <Button type='Danger'>Cancel</Button>
     </Aux>
 
   );
