@@ -12,12 +12,33 @@ const INGRIDIENTS_PRICES = {
 }
 
 class BurgerBuilder extends Component {
+  state = {
+    ingridients: {
+      salad: 0,
+      bacon: 0,
+      cheese: 0,
+      meat: 0
+    },
+    totalPrice: 2.00,
+    purchasable: false
+  }
+
+  updateStatePurchasable = (ingridients) => {
+    const sum = Object.keys(ingridients)
+      .map(key => {
+        return ingridients[key];
+      })
+      .reduce((sum, el) => sum + el);
+      this.setState({purchasable: sum > 0});
+  }
+
   addIngridient = (type) => {
     const newIngridients = {...this.state.ingridients};
     let newPrice = parseFloat(this.state.totalPrice);
     newIngridients[type] += 1;
     newPrice += INGRIDIENTS_PRICES[type];
     this.setState({ingridients: newIngridients, totalPrice: newPrice.toFixed(2)});
+    this.updateStatePurchasable(newIngridients);
   }
 
   removeIngridient = (type) => {
@@ -27,17 +48,9 @@ class BurgerBuilder extends Component {
        newIngridients[type] -= 1;
        newPrice -= INGRIDIENTS_PRICES[type];
        this.setState({ingridients: newIngridients, totalPrice: newPrice.toFixed(2)});
-    }
-  }
+       this.updateStatePurchasable(newIngridients);
 
-  state = {
-    ingridients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
-    totalPrice: 2.00
+    }
   }
 
   render () {
@@ -53,7 +66,8 @@ class BurgerBuilder extends Component {
           addIngridient={this.addIngridient}
           removeIngridient={this.removeIngridient}
           disabled={btnIsDisabled}
-          price={this.state.totalPrice}/>
+          price={this.state.totalPrice}
+          disabled={!this.state.purchasable}/>
       </Aux>
     );
   }
