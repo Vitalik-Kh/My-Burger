@@ -60,8 +60,12 @@ class BurgerBuilder extends Component {
     this.setState({viewOrder: true});
   }
 
-  hideBackdrop = () => {
+  hideOrder = () => {
     this.setState({viewOrder: false});
+  }
+
+  continueOrder = () => {
+    alert('Going to checkout');
   }
 
   render () {
@@ -74,8 +78,11 @@ class BurgerBuilder extends Component {
       <Aux>
         <Modal
           visible={this.state.viewOrder}
-          hideBackdrop={this.hideBackdrop}>
-          <OrderSummery ingridients={this.state.ingridients}/>
+          hideBackdrop={this.hideOrder}>
+          <OrderSummery
+            ingridients={this.state.ingridients}
+            cancel={this.hideOrder}
+            checkout={this.continueOrder}/>
         </Modal>
         <Burger ingridients={this.state.ingridients}/>
         <BuildControls
