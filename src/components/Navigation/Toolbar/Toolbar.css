@@ -13,3 +13,11 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.Logo {
+  height: 80%;
+}
+
+.Logo img {
+  height: 80%;
+}
