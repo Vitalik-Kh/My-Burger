@@ -21,3 +21,9 @@
 .Logo img {
   height: 80%;
 }
+
+@media (max-width: 499px) {
+  .desctopOnly {
+    display: none;
+  }
+}
