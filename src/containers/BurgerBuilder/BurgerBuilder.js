@@ -23,7 +23,8 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 2.00,
     purchasable: false,
-    viewOrder: false
+    viewOrder: false,
+    currency: '£'
   }
 
   updateStatePurchasable = (ingridients) => {
@@ -82,14 +83,15 @@ class BurgerBuilder extends Component {
           <OrderSummery
             ingridients={this.state.ingridients}
             cancel={this.hideOrder}
-            checkout={this.continueOrder}/>
+            checkout={this.continueOrder}
+            price={this.state.currency + this.state.totalPrice}/>
         </Modal>
         <Burger ingridients={this.state.ingridients}/>
         <BuildControls
           addIngridient={this.addIngridient}
           removeIngridient={this.removeIngridient}
           disabled={btnIsDisabled}
-          price={this.state.totalPrice}
+          price={this.state.currency + this.state.totalPrice}
           purchasable={!this.state.purchasable}
           clicked={this.viewOrder}/>
       </Aux>
