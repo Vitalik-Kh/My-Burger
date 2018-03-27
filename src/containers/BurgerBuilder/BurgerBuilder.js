@@ -18,17 +18,23 @@ const INGRIDIENTS_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingridients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingridients: null,
     totalPrice: 2.00,
     purchasable: false,
     viewOrder: false,
     currency: '£',
-    loading: false
+    loading: false,
+    error: false
+  }
+
+  componentDidMount = () => {
+    axios.get('/ingridients.json')
+      .then(response => {
+        this.setState({ingridients: response.data});
+      })
+      .catch(error => {
+        this.setState({error: true});
+      });
   }
 
   updateStatePurchasable = (ingridients) => {
@@ -90,20 +96,39 @@ class BurgerBuilder extends Component {
       .catch(this.setState({loading: false, viewOrder: false}));
   }
 
-  render () {
-    let orderSummery = (
-      <OrderSummery
-        ingridients={this.state.ingridients}
-        cancel={this.hideOrder}
-        checkout={this.continueOrder}
-        price={this.state.currency + this.state.totalPrice}/>
-    );
+  render = () => {
+
+    let orderSummery = null;
+    let burger = this.state.error ? <p>Can't connect to the server</p> : <Spinner />
+
+    if (this.state.ingridients) {
+      const btnIsDisabled = {...this.state.ingridients};
+      for (let key in btnIsDisabled) {
+        btnIsDisabled[key] = btnIsDisabled[key] <= 0;
+      }
+      burger = (
+        <Aux>
+          <Burger ingridients={this.state.ingridients}/>
+          <BuildControls
+            addIngridient={this.addIngridient}
+            removeIngridient={this.removeIngridient}
+            disabled={btnIsDisabled}
+            price={this.state.currency + this.state.totalPrice}
+            purchasable={!this.state.purchasable}
+            clicked={this.viewOrder}/>
+        </Aux>
+      );
+      orderSummery = (
+        <OrderSummery
+          ingridients={this.state.ingridients}
+          cancel={this.hideOrder}
+          checkout={this.continueOrder}
+          price={this.state.currency + this.state.totalPrice}/>
+      );
+    }
+
     if (this.state.loading) {
       orderSummery = <Spinner />
-    }
-    const btnIsDisabled = {...this.state.ingridients};
-    for (let key in btnIsDisabled) {
-      btnIsDisabled[key] = btnIsDisabled[key] <= 0;
     }
 
     return (
@@ -113,14 +138,7 @@ class BurgerBuilder extends Component {
           hideBackdrop={this.hideOrder}>
           {orderSummery}
         </Modal>
-        <Burger ingridients={this.state.ingridients}/>
-        <BuildControls
-          addIngridient={this.addIngridient}
-          removeIngridient={this.removeIngridient}
-          disabled={btnIsDisabled}
-          price={this.state.currency + this.state.totalPrice}
-          purchasable={!this.state.purchasable}
-          clicked={this.viewOrder}/>
+        {burger}
       </Aux>
     );
   }
