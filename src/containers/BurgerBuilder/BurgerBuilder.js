@@ -5,6 +5,8 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummery from '../../components/Burger/OrderSummery/OrderSummery';
+import axios from '../../axiosOrder';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const INGRIDIENTS_PRICES = {
   salad: 0.70,
@@ -24,7 +26,8 @@ class BurgerBuilder extends Component {
     totalPrice: 2.00,
     purchasable: false,
     viewOrder: false,
-    currency: '£'
+    currency: '£',
+    loading: false
   }
 
   updateStatePurchasable = (ingridients) => {
@@ -66,10 +69,37 @@ class BurgerBuilder extends Component {
   }
 
   continueOrder = () => {
-    alert('Going to checkout');
+    this.setState({loading: true})
+    const order = {
+      ingridients: this.state.ingridients,
+      price: this.state.totalPrice,
+      customer: {
+        name: 'Vitalii',
+        address: {
+          street: 'Some str.',
+          postcode: 'k3 l32',
+          country: 'GB'
+        },
+        email: 'some@gmail.com'
+      },
+      deliveryMethod: 'fastest'
+    }
+    axios.post('/orders.json', order)
+      .then(this.setState({loading: false, viewOrder: false}))
+      .catch(this.setState({loading: false, viewOrder: false}));
   }
 
   render () {
+    let orderSummery = (
+      <OrderSummery
+        ingridients={this.state.ingridients}
+        cancel={this.hideOrder}
+        checkout={this.continueOrder}
+        price={this.state.currency + this.state.totalPrice}/>
+    );
+    if (this.state.loading) {
+      orderSummery = <Spinner />
+    }
     const btnIsDisabled = {...this.state.ingridients};
     for (let key in btnIsDisabled) {
       btnIsDisabled[key] = btnIsDisabled[key] <= 0;
@@ -80,11 +110,7 @@ class BurgerBuilder extends Component {
         <Modal
           visible={this.state.viewOrder}
           hideBackdrop={this.hideOrder}>
-          <OrderSummery
-            ingridients={this.state.ingridients}
-            cancel={this.hideOrder}
-            checkout={this.continueOrder}
-            price={this.state.currency + this.state.totalPrice}/>
+          {orderSummery}
         </Modal>
         <Burger ingridients={this.state.ingridients}/>
         <BuildControls
