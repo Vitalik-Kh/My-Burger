@@ -4,7 +4,7 @@ import Button from '../../UI/Button/Button';
 import classes from './CheckoutSummery.css'
 
 const checkoutSummery = (props) => {
-
+  console.log(props);
   return (
     <div className={classes.CheckoutSummery}>
       <h1>We hope you like it!</h1>
@@ -13,10 +13,10 @@ const checkoutSummery = (props) => {
       </div>
       <Button
         type='Danger'
-        clicked>CANCLE</Button>
+        clicked={props.clickCancel}>CANCLE</Button>
       <Button
         type='Success'
-        clicked>CONTINIUE</Button>
+        clicked={props.clickContinue}>CONTINIUE</Button>
     </div>
   );
 }

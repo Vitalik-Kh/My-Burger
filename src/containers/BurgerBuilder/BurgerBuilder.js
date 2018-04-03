@@ -76,7 +76,15 @@ class BurgerBuilder extends Component {
   }
 
   continueOrder = () => {
-    this.props.history.push(this.props.match.url + 'checkout')
+    this.props.history.push({
+      pathname: this.props.match.url + 'checkout',
+      search: Object.keys(this.state.ingridients)
+        .map(ingr => {
+          return ingr + '=' + this.state.ingridients[ingr] + '&';
+        })
+        .reduce((prev, cur) => prev + cur, '?')
+        .slice(0,-1)
+    })
   }
 
   finishOrder = () => {
