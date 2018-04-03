@@ -76,6 +76,10 @@ class BurgerBuilder extends Component {
   }
 
   continueOrder = () => {
+    this.props.history.push(this.props.match.url + 'checkout')
+  }
+
+  finishOrder = () => {
     this.setState({loading: true})
     const order = {
       ingridients: this.state.ingridients,
