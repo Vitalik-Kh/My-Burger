@@ -1,7 +1,16 @@
 .Order {
-  width: 100%;
+  width: 80%;
   border: 1px solid #eee;
   box-shadow: 0 2px 3px #ccc;
-  padding: 10px;
+  padding: 8px 24px;
   margin: 10px auto;
+}
+
+.ingridient {
+  display: inline-block;
+  border: solid 1px lightgray;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 0 8px;
+  text-transform: capitalize;
 }
