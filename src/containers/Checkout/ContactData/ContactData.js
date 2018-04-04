@@ -7,11 +7,56 @@ import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
   state = {
-    name: '',
-    email: '',
-    address: {
-      street: '',
-      postcode: ''
+    orderForm: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Your name'
+        },
+        value: ''
+      },
+      street: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Your address'
+        },
+        value: ''
+      },
+      postcode: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Postcode'
+        },
+        value: ''
+      },
+      country: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Country'
+        },
+        value: ''
+      },
+      email: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'email',
+          placeholder: 'E-mail'
+        },
+        value: ''
+      },
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: {
+          options: [
+            {value: 'Fastest'},
+            {value: 'Cheapest'}
+          ]
+        }
+      }
     },
     loading: false
   }
@@ -22,17 +67,7 @@ class ContactData extends Component {
     this.setState({loading: true})
     const order = {
       ingridients: this.props.ingridients,
-      price: this.props.price,
-      customer: {
-        name: 'Vitalii',
-        address: {
-          street: 'Some str.',
-          postcode: 'k3 l32',
-          country: 'GB'
-        },
-        email: 'some@gmail.com'
-      },
-      deliveryMethod: 'fastest'
+      price: this.props.price
     }
     axios.post('/orders.json', order)
       .then(response => {
@@ -43,23 +78,41 @@ class ContactData extends Component {
   }
 
   render() {
-    console.log(this.props);
     let form = <Spinner />
     if (!this.state.loading) {
       form = (
         <form>
-          <Input inputtype='input' type='text' name='name' placeholder='Your name' />
-          <Input inputtype='input' type='email' name='email' placeholder='Your email' />
-          <Input inputtype='input' type='text' name='steet' placeholder='Street' />
-          <Input inputtype='input' type='text' name='postcode' placeholder='Postecode' />
+          <Input elType='...' elConfig='...' value='...' />
+          {
+
+          }
           <Button type='Success' clicked={this.orderHandler}>ORDER</Button>
         </form>
       );
     }
+
+    const formElArr = [];
+    for (let key in this.state.orderForm) {
+      formElArr.push({
+        id: key,
+        config: this.state.orderForm[key]
+      });
+    }
+
     return (
       <div className={classes.ContactData}>
         <h3>Enter your contact data</h3>
-        {form}
+        {
+          formElArr.map(el => {
+            return (
+              <Input
+                key={el.id}
+                elType={el.config.elementType}
+                elConfig={el.config.elementConfig}
+                value={el.config.value} />
+            );
+          })
+        }
       </div>
     );
   }
