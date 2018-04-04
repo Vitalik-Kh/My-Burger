@@ -10,11 +10,22 @@ const input = (props) => {
         {...props.elConfig}
         value={props.value} />;
       break;
-    case('textarea'):
-      inputEl = <textarea
-        className={classes.InputEl}
-        {...props.elConfig}
-        value={props.value} />;
+    case('select'):
+      inputEl = (
+        <select
+          className={classes.InputEl}
+          value={props.value}>
+          {
+            props.elConfig.options.map(option => {
+              return (
+                <option value={option.value} key={option.value}>
+                  {option.displayValue}
+                </option>
+              )
+            })
+          }
+        </select>
+      );
       break;
     default:
       inputEl = <input
