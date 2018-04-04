@@ -1,23 +1,28 @@
 import React, {Component} from 'react';
-import axios from '../../axiosOrder';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import {Route} from 'react-router-dom';
 
 import CheckoutSummery from '../../components/Order/CheckoutSummery/CheckoutSummery';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import ContactData from './ContactData/ContactData';
 
 class Checkout extends Component {
   state={
-    ingridients: null
+    ingridients: null,
+    price: 0
   }
 
-  componentDidMount = () => {
+  componentWillMount = () => {
     const query = new URLSearchParams(this.props.location.search);
     const orderIngridients = {};
+    let price;
     for (let param of query.entries()) {
-      orderIngridients[param[0]] = +param[1];
+      if (param[0] === 'price') {
+        price = param[1];
+      } else {
+        orderIngridients[param[0]] = +param[1];
+      }
     }
-    console.log(orderIngridients);
-    this.setState({ingridients: orderIngridients});
-    console.log(this.state.ingridients);
+    this.setState({ingridients: orderIngridients, price: price});
   }
 
   clickCancel = () => {
@@ -25,13 +30,13 @@ class Checkout extends Component {
   }
 
   clickContinue = () => {
-    console.log(this.props);
+    this.props.history.push(this.props.match.url + '/contact-data');
   }
 
   render() {
     console.log(this.state.ingridients);
     let checkout = <Spinner />;
-    if (this.state.ingridients) {
+    if (this.state.ingridients) {//in course files they skip this check
       checkout = (
         <CheckoutSummery
           ingridients={this.state.ingridients}
@@ -43,6 +48,14 @@ class Checkout extends Component {
     return (
         <div>
           {checkout}
+          <Route
+            path={this.props.match.url + '/contact-data'}
+            render={(props) => {
+              return (<ContactData
+                ingridients={this.state.ingridients}
+                price={this.state.price}
+                {...props}/>)
+            }} />
         </div>
 
     );
