@@ -8,13 +8,15 @@ const input = (props) => {
       inputEl = <input
         className={classes.InputEl}
         {...props.elConfig}
-        value={props.value} />;
+        value={props.value}
+        onChange={props.changed}/>;
       break;
     case('select'):
       inputEl = (
         <select
           className={classes.InputEl}
-          value={props.value}>
+          value={props.value}
+          onChange={props.changed}>
           {
             props.elConfig.options.map(option => {
               return (
@@ -31,7 +33,8 @@ const input = (props) => {
       inputEl = <input
         className={classes.InputEl}
         {...props.elConfig}
-        value={props.value} />;
+        value={props.value}
+        onChange={props.changed}/>;
   }
 
   return (
