@@ -3,10 +3,17 @@ import classes from './Input.css';
 
 const input = (props) => {
   let inputEl = null;
+  const inputClasses = [classes.Input];
+  let validationMessage = null;
+  if (props.invalid && props.shouldValid && props.touched) {
+    inputClasses.push(classes.Invalid);
+    validationMessage = <p className={classes.ValidationMessage}>Please, enter valid {props.name}</p>;
+  }
+
   switch (props.elType) {
     case('input'):
       inputEl = <input
-        className={classes.InputEl}
+        className={inputClasses.join(' ')}
         {...props.elConfig}
         value={props.value}
         onChange={props.changed}/>;
@@ -14,7 +21,7 @@ const input = (props) => {
     case('select'):
       inputEl = (
         <select
-          className={classes.InputEl}
+          className={inputClasses.join(' ')}
           value={props.value}
           onChange={props.changed}>
           {
@@ -41,6 +48,7 @@ const input = (props) => {
     <div className={classes.Input}>
       <label className={classes.Lable}>{props.label}</label>
       {inputEl}
+      {validationMessage}
     </div>
   );
 }

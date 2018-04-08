@@ -18,7 +18,8 @@ class ContactData extends Component {
         validation: {
           required: true
         },
-        valid: false
+        valid: false,
+        touched: false
       },
       street: {
         elementType: 'input',
@@ -30,7 +31,8 @@ class ContactData extends Component {
         validation: {
           required: true
         },
-        valid: false
+        valid: false,
+        touched: false
       },
       postcode: {
         elementType: 'input',
@@ -44,7 +46,8 @@ class ContactData extends Component {
           minLength: 5,
           maxLength: 5
         },
-        valid: false
+        valid: false,
+        touched: false
       },
       country: {
         elementType: 'input',
@@ -56,7 +59,8 @@ class ContactData extends Component {
         validation: {
           required: true
         },
-        valid: false
+        valid: false,
+        touched: false
       },
       email: {
         elementType: 'input',
@@ -68,7 +72,8 @@ class ContactData extends Component {
         validation: {
           required: true
         },
-        valid: false
+        valid: false,
+        touched: false
       },
       deliveryMethod: {
         elementType: 'select',
@@ -111,10 +116,10 @@ class ContactData extends Component {
       isValid = value.trim() !== '' && isValid;
     }
     if (rules.minLength) {
-      isValid = value.length >=rules.minLength && isValid;
+      isValid = value.replace(/\s/g, '').length >=rules.minLength && isValid;
     }
     if (rules.maxLength) {
-      isValid = value.length <=rules.maxLength && isValid;
+      isValid = value.replace(/\s/g, '').length <=rules.maxLength && isValid;
     }
     return isValid;
   }
@@ -122,6 +127,7 @@ class ContactData extends Component {
   inputChangedHandler = (event, identifier) => {
     const updatedOrderForm = {...this.state.orderForm};
     const updatedOrderEl = {...this.state.orderForm[identifier]};
+    updatedOrderEl.touched = true;
     updatedOrderEl.value = event.target.value;
     updatedOrderEl.valid = this.checkValidity(updatedOrderEl.value, updatedOrderEl.validation);
     updatedOrderForm[identifier] = updatedOrderEl;
@@ -160,10 +166,14 @@ class ContactData extends Component {
               return (
                 <Input
                   key={el.id}
+                  name={el.id}
                   elType={el.config.elementType}
                   elConfig={el.config.elementConfig}
                   value={el.config.value}
-                  changed={(event) => this.inputChangedHandler(event, el.id)}/>
+                  changed={(event) => this.inputChangedHandler(event, el.id)}
+                  invalid={!el.config.valid}
+                  shouldValid={el.config.validation}
+                  touched={el.config.touched}/>
               );
             })
           }
