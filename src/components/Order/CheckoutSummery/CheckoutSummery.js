@@ -10,6 +10,7 @@ const checkoutSummery = (props) => {
       <h1>We hope you like it!</h1>
       <div style={{width: '100%', margin: 'auto'}}>
         <Burger ingridients={props.ingridients}/>
+        <p>Total price: <strong>{props.price}</strong></p>
       </div>
       <Button
         type='Danger'

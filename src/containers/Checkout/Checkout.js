@@ -5,25 +5,9 @@ import CheckoutSummery from '../../components/Order/CheckoutSummery/CheckoutSumm
 import Spinner from '../../components/UI/Spinner/Spinner';
 import ContactData from './ContactData/ContactData';
 
-class Checkout extends Component {
-  state={
-    ingridients: null,
-    price: 0
-  }
+import {connect} from 'react-redux';
 
-  componentWillMount = () => {
-    const query = new URLSearchParams(this.props.location.search);
-    const orderIngridients = {};
-    let price;
-    for (let param of query.entries()) {
-      if (param[0] === 'price') {
-        price = param[1];
-      } else {
-        orderIngridients[param[0]] = +param[1];
-      }
-    }
-    this.setState({ingridients: orderIngridients, price: price});
-  }
+class Checkout extends Component {
 
   clickCancel = () => {
     this.props.history.goBack();
@@ -34,32 +18,35 @@ class Checkout extends Component {
   }
 
   render() {
-    console.log(this.state.ingridients);
     let checkout = <Spinner />;
-    if (this.state.ingridients) {//in course files they skip this check
-      checkout = (
-        <CheckoutSummery
-          ingridients={this.state.ingridients}
-          clickCancel={this.clickCancel}
-          clickContinue={this.clickContinue}/>
-      );
-    }
+    checkout = (
+      <CheckoutSummery
+        ingridients={this.props.ingridients}
+        clickCancel={this.clickCancel}
+        clickContinue={this.clickContinue}
+        price={this.props.currency + this.props.totalPrice.toFixed(2)}/>
+    );
+
 
     return (
-        <div>
-          {checkout}
-          <Route
-            path={this.props.match.url + '/contact-data'}
-            render={(props) => {
-              return (<ContactData
-                ingridients={this.state.ingridients}
-                price={this.state.price}
-                {...props}/>)
-            }} />
-        </div>
-
+      <div>
+        {checkout}
+        <Route
+          path={this.props.match.url + '/contact-data'}
+          component={ContactData}
+        />
+      </div>
     );
   }
 }
 
-export default Checkout;
+const mapStateToProps = (state) => {
+  return {
+    ingridients: state.ingridients,
+    totalPrice: state.totalPrice,
+    currency: state.currency
+  };
+};
+
+
+export default connect(mapStateToProps)(Checkout);
