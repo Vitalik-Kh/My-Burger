@@ -8,6 +8,8 @@ import OrderSummery from '../../components/Burger/OrderSummery/OrderSummery';
 import axios from '../../axiosOrder';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler';
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/actions';
 
 const INGRIDIENTS_PRICES = {
   salad: 0.70,
@@ -18,7 +20,6 @@ const INGRIDIENTS_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingridients: null,
     totalPrice: 2.00,
     purchasable: false,
     viewOrder: false,
@@ -77,8 +78,8 @@ class BurgerBuilder extends Component {
 
   continueOrder = () => {
     const queryParams = [];
-    for (let i in this.state.ingridients) {
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingridients[i]));
+    for (let i in this.props.ingridients) {
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ingridients[i]));
     }
     queryParams.push('price=' + this.state.totalPrice);
     const queryString = queryParams.join('&');
@@ -96,17 +97,17 @@ class BurgerBuilder extends Component {
     let orderSummery = null;
     let burger = this.state.error ? <p>Can't connect to the server</p> : <Spinner />
 
-    if (this.state.ingridients) {
-      const btnIsDisabled = {...this.state.ingridients};
+    if (this.props.ingridients) {
+      const btnIsDisabled = {...this.props.ingridients};
       for (let key in btnIsDisabled) {
         btnIsDisabled[key] = btnIsDisabled[key] <= 0;
       }
       burger = (
         <Aux>
-          <Burger ingridients={this.state.ingridients}/>
+          <Burger ingridients={this.props.ingridients}/>
           <BuildControls
-            addIngridient={this.addIngridient}
-            removeIngridient={this.removeIngridient}
+            addIngridient={this.props.onAddIngridient}
+            removeIngridient={this.props.onRemoveIngridient}
             disabled={btnIsDisabled}
             price={this.state.currency + this.state.totalPrice}
             purchasable={!this.state.purchasable}
@@ -115,7 +116,7 @@ class BurgerBuilder extends Component {
       );
       orderSummery = (
         <OrderSummery
-          ingridients={this.state.ingridients}
+          ingridients={this.props.ingridients}
           cancel={this.hideOrder}
           checkout={this.continueOrder}
           price={this.state.currency + this.state.totalPrice}/>
@@ -139,4 +140,22 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+const mapStateToProps = (state) => {
+  return {
+    ingridients: state.ingridients,
+    totalPrice: state.totalPrice
+  };
+};
+
+const mapPropsToDispatch = (dispatch) => {
+  return {
+    onAddIngridient: (ingName) => {
+      dispatch({type: actionTypes.ADD_INGRIDIENT, ingridientName: ingName});
+    },
+    onRemoveIngridient: (ingName) => {
+      dispatch({type: actionTypes.REMOVE_INGRIDIENT, ingridientName: ingName});
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapPropsToDispatch)(withErrorHandler(BurgerBuilder, axios));
