@@ -9,23 +9,15 @@ import axios from '../../axiosOrder';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions/index';
+import * as burgerBuilderActions from '../../store/actions/index';
 
 class BurgerBuilder extends Component {
   state = {
-    viewOrder: false,
-    loading: false,
-    error: false
+    viewOrder: false
   }
 
   componentDidMount = () => {
-    // axios.get('/ingridients.json')
-    //   .then(response => {
-    //     this.setState({ingridients: response.data});
-    //   })
-    //   .catch(error => {
-    //     this.setState({error: true});
-    //   });
+    this.props.onInitIngridients();
   }
 
   updateStatePurchasable = (ingridients) => {
@@ -52,7 +44,7 @@ class BurgerBuilder extends Component {
   render = () => {
 
     let orderSummery = null;
-    let burger = this.state.error ? <p>Can't connect to the server</p> : <Spinner />
+    let burger = this.props.error ? <p>Can't connect to the server</p> : <Spinner />
 
     if (this.props.ingridients) {
       const btnIsDisabled = {...this.props.ingridients};
@@ -80,10 +72,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummery = <Spinner />
-    }
-
     return (
       <Aux>
         <Modal
@@ -101,17 +89,21 @@ const mapStateToProps = (state) => {
   return {
     ingridients: state.ingridients,
     totalPrice: state.totalPrice.toFixed(2),
-    currency: state.currency
+    currency: state.currency,
+    error: state.error
   };
 };
 
 const mapPropsToDispatch = (dispatch) => {
   return {
     onAddIngridient: (ingName) => {
-      dispatch(actionTypes.addIngridient(ingName));
+      dispatch(burgerBuilderActions.addIngridient(ingName));
     },
     onRemoveIngridient: (ingName) => {
-      dispatch(actionTypes.removeIngridient(ingName));
+      dispatch(burgerBuilderActions.removeIngridient(ingName));
+    },
+    onInitIngridients: () => {
+      dispatch(burgerBuilderActions.initIngridients());
     }
   };
 };
