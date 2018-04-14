@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 
 import CheckoutSummery from '../../components/Order/CheckoutSummery/CheckoutSummery';
-import Spinner from '../../components/UI/Spinner/Spinner';
 import ContactData from './ContactData/ContactData';
-import * as actions from '../../store/actions/index';
-
 import {connect} from 'react-redux';
 
 class Checkout extends Component {
