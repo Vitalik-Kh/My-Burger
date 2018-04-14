@@ -4,6 +4,7 @@ import {Route, Redirect} from 'react-router-dom';
 import CheckoutSummery from '../../components/Order/CheckoutSummery/CheckoutSummery';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import ContactData from './ContactData/ContactData';
+import * as actions from '../../store/actions/index';
 
 import {connect} from 'react-redux';
 
@@ -20,8 +21,10 @@ class Checkout extends Component {
   render() {
     let summery = <Redirect to='/' />
     if (this.props.ingridients) {
+      const redirectHome = this.props.purchased ? <Redirect to='/' /> : null;
       summery = (
         <div>
+          {redirectHome}
           <CheckoutSummery
             ingridients={this.props.ingridients}
             clickCancel={this.clickCancel}
@@ -35,9 +38,6 @@ class Checkout extends Component {
       );
     }
 
-
-
-
     return (
       <div>
         {summery}
@@ -50,9 +50,9 @@ const mapStateToProps = (state) => {
   return {
     ingridients: state.bb.ingridients,
     totalPrice: state.bb.totalPrice,
-    currency: state.bb.currency
+    currency: state.bb.currency,
+    purchased: state.ord.purchased
   };
 };
-
 
 export default connect(mapStateToProps)(Checkout);

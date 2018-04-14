@@ -86,6 +86,7 @@ class ContactData extends Component {
             {value: 'cheapest', displayValue: 'Cheapest'}
           ]
         },
+        value: 'fastest',
         validation: {},
         valid: true
       }
@@ -125,6 +126,7 @@ class ContactData extends Component {
   }
 
   inputChangedHandler = (event, identifier) => {
+    console.log(event.target);
     const updatedOrderForm = {...this.state.orderForm};
     const updatedOrderEl = {...this.state.orderForm[identifier]};
     updatedOrderEl.touched = true;
@@ -136,9 +138,7 @@ class ContactData extends Component {
     for (let name in updatedOrderForm) {
       formIsValid = updatedOrderForm[name].valid && formIsValid;
     }
-    console.log(formIsValid);
-
-
+    console.log(updatedOrderForm);
 
     this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
   }
