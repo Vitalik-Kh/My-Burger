@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route} from 'react-router-dom';
+import {Route, Redirect} from 'react-router-dom';
 
 import CheckoutSummery from '../../components/Order/CheckoutSummery/CheckoutSummery';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -18,23 +18,29 @@ class Checkout extends Component {
   }
 
   render() {
-    let checkout = <Spinner />;
-    checkout = (
-      <CheckoutSummery
-        ingridients={this.props.ingridients}
-        clickCancel={this.clickCancel}
-        clickContinue={this.clickContinue}
-        price={this.props.currency + this.props.totalPrice.toFixed(2)}/>
-    );
+    let summery = <Redirect to='/' />
+    if (this.props.ingridients) {
+      summery = (
+        <div>
+          <CheckoutSummery
+            ingridients={this.props.ingridients}
+            clickCancel={this.clickCancel}
+            clickContinue={this.clickContinue}
+            price={this.props.currency + this.props.totalPrice.toFixed(2)}/>
+          <Route
+            path={this.props.match.url + '/contact-data'}
+            component={ContactData}
+          />
+        </div>
+      );
+    }
+
+
 
 
     return (
       <div>
-        {checkout}
-        <Route
-          path={this.props.match.url + '/contact-data'}
-          component={ContactData}
-        />
+        {summery}
       </div>
     );
   }
@@ -42,9 +48,9 @@ class Checkout extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ingridients: state.ingridients,
-    totalPrice: state.totalPrice,
-    currency: state.currency
+    ingridients: state.bb.ingridients,
+    totalPrice: state.bb.totalPrice,
+    currency: state.bb.currency
   };
 };
 
