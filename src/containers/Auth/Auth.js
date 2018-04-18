@@ -7,6 +7,7 @@ import * as actions from '../../store/actions/index';
 import {connect} from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Aux from '../../hoc/auxi';
+import {Redirect} from 'react-router-dom';
 
 class Auth extends Component {
 
@@ -122,18 +123,21 @@ class Auth extends Component {
     }
 
     return (
-      <div className = {classes.Auth}>
-        <form onSubmit = {this.submitHandler}>
-          {form}
-          {errorMessage}
-          <Button type='Success' disabled = {false}>Submit</Button>
-        </form>
-        <Button
-          type='Danger'
-          clicked={this.switchAuthModeHandler} >
-          Switch to {this.state.isSignUp ? 'SignIn' : 'SignUp'}
-        </Button>
-      </div>
+      <Aux>
+        {this.props.isAuth ? <Redirect to='/' /> : null}
+        <div className = {classes.Auth}>
+          <form onSubmit = {this.submitHandler}>
+            {form}
+            {errorMessage}
+            <Button type='Success' disabled = {false}>Submit</Button>
+          </form>
+          <Button
+            type='Danger'
+            clicked={this.switchAuthModeHandler} >
+            Switch to {this.state.isSignUp ? 'SignIn' : 'SignUp'}
+          </Button>
+        </div>
+    </Aux>
     );
   }
 }
@@ -141,7 +145,8 @@ class Auth extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isAuth: state.auth.token !== null
   }
 }
 
