@@ -30,7 +30,13 @@ class BurgerBuilder extends Component {
   }
 
   viewOrder = () => {
-    this.setState({viewOrder: true});
+    if (this.props.isAuth) {
+      this.setState({viewOrder: true});
+    } else {
+      this.props.onSetAuthRedirectPath('/checkout');
+      this.props.history.push('/auth');
+    }
+
   }
 
   hideOrder = () => {
@@ -38,8 +44,8 @@ class BurgerBuilder extends Component {
   }
 
   continueOrder = () => {
-    this.props.onInitPurchase();
-    this.props.history.push(this.props.match.url + 'checkout');
+      this.props.onInitPurchase();
+      this.props.history.push(this.props.match.url + 'checkout');
   }
 
   render = () => {
@@ -61,7 +67,8 @@ class BurgerBuilder extends Component {
             disabled={btnIsDisabled}
             price={this.props.currency + this.props.totalPrice}
             purchasable={!this.updateStatePurchasable(this.props.ingridients)}
-            clicked={this.viewOrder}/>
+            clicked={this.viewOrder}
+            isAuth={this.props.isAuth} />
         </Aux>
       );
       orderSummery = (
@@ -69,7 +76,8 @@ class BurgerBuilder extends Component {
           ingridients={this.props.ingridients}
           cancel={this.hideOrder}
           checkout={this.continueOrder}
-          price={this.props.currency + this.props.totalPrice}/>
+          price={this.props.currency + this.props.totalPrice}
+        />
       );
     }
 
@@ -91,7 +99,8 @@ const mapStateToProps = (state) => {
     ingridients: state.bb.ingridients,
     totalPrice: state.bb.totalPrice.toFixed(2),
     currency: state.bb.currency,
-    error: state.bb.error
+    error: state.bb.error,
+    isAuth: state.auth.token !== null,
   };
 };
 
@@ -108,6 +117,9 @@ const mapPropsToDispatch = (dispatch) => {
     },
     onInitPurchase: () => {
       dispatch(actions.initPurchase());
+    },
+    onSetAuthRedirectPath: (path) => {
+      dispatch(actions.setAuthRedirectPath(path));
     }
   };
 };

@@ -4,7 +4,8 @@ const initialState = {
   ingridients: null,
   currency: '£',
   totalPrice: 2,
-  error: false
+  error: false,
+  building: false
 }
 
 const INGRIDIENTS_PRICES = {
@@ -15,14 +16,14 @@ const INGRIDIENTS_PRICES = {
 }
 
 const addIngridient = (state, action) => {
-  console.log('boo')
   return {//use utility function for practice
     ...state,
     ingridients: {
       ...state.ingridients,
       [action.ingridientName]: state.ingridients[action.ingridientName] + 1
     },
-    totalPrice: state.totalPrice + INGRIDIENTS_PRICES[action.ingridientName]
+    totalPrice: state.totalPrice + INGRIDIENTS_PRICES[action.ingridientName],
+    building: true
   };
 };
 
@@ -47,7 +48,8 @@ const setIngridients = (state, action) => {
       meat: action.ingridients.meat
     },
     error: false,
-    totalPrice: 2
+    totalPrice: 2,
+    building: false
   };
 }
 
