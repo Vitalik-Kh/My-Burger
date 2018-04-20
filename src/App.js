@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from './store/actions';
 
 import Layout  from './components/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
@@ -9,6 +11,10 @@ import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.onTryAutoSighup();
+  }
+
   render() {
     return (
       <Layout>
@@ -22,4 +28,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapPropsToDispatch = dispatch => {
+  return {
+    onTryAutoSighup: () => dispatch(actions.authCheckState())
+  }
+}
+
+export default withRouter(connect(null, mapPropsToDispatch)(App));
