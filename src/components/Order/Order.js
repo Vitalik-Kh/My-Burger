@@ -17,7 +17,6 @@ const order = (props) => {
       key={ingr.name}>{ingr.name} {ingr.amount}</span>
   });
 
-  console.log(ingridients);
   return (
 
     <div className={classes.Order}>
