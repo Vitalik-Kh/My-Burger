@@ -4,9 +4,6 @@ import Aux from '../../../hoc/auxi';
 import Button from '../../UI/Button/Button';
 
 class OrderSummery extends Component {
-  componentWillUpdate() {
-    console.log('[OrderSummery] will update')
-  }
 
   render() {
     const ingridientsList = Object.keys(this.props.ingridients)
