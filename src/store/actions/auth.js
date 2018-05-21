@@ -1,5 +1,4 @@
 import * as actionTypes from './actionTypes';
-import axios from 'axios';
 
 export const authStart = () => {
   return {type: actionTypes.AUTH_START};
@@ -20,10 +19,7 @@ export const authFail = (error) => {
   }
 }
 
-export const authLogout = () => {
-  // localStorage.removeItem('token');
-  // localStorage.removeItem('expirationDate');
-  // localStorage.removeItem('userId');
+export const authLogout = () => {;
   return {
     type: actionTypes.AUTH_INITIATE_LOGOUT
   }
@@ -36,9 +32,6 @@ export const logoutSucceed = () => {
 }
 
 export const checkAuthTimeout = (expirationTime) => {
-  // return dispatch => {
-  //   setTimeout(() => dispatch(authLogout()), expirationTime * 1000);
-  // }
   return {
     type: actionTypes.AUTH_CHECK_TIMEOUT,
     expirationTime: expirationTime
@@ -46,35 +39,11 @@ export const checkAuthTimeout = (expirationTime) => {
 }
 
 export const auth = (email, password, isSignUp) => {
-  return dispatch => {
-    dispatch(authStart());
-    const authData = {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    }
-    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
-    const key = 'AIzaSyDFEJDVFKIftGoDl8wFd_oiIX2H68wh5zM';
-    if (!isSignUp) {
-      url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
-    }
-
-    axios.post(url + key, authData)
-      .then(response => {
-        const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
-        localStorage.setItem('token', response.data.idToken);
-        localStorage.setItem('expirationDate', expirationDate);
-        localStorage.setItem('userId', response.data.localId);
-        dispatch(authSuccess(response.data.idToken, response.data.localId));
-        dispatch(checkAuthTimeout(response.data.expiresIn));
-      })
-      .catch(err => {
-        if (err.response) {
-          dispatch(authFail(err.response.data.error));
-        } else {
-          dispatch(authFail(err));
-        }
-      })
+  return {
+    type: actionTypes.INIT_AUTH,
+    email: email,
+    password: password,
+    isSignUp: isSignUp
   }
 }
 
