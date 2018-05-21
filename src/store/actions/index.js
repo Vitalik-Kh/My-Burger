@@ -1,7 +1,9 @@
 export {
   addIngridient,
   removeIngridient,
-  initIngridients
+  initIngridients,
+  setIngridients,
+  fetchIngridientsFaild
 } from './burgerBuilder';
 
 export {

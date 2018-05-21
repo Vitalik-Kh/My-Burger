@@ -55,19 +55,7 @@ export const setAuthRedirectPath = (path) => {
 }
 
 export const authCheckState = () => {
-  return dispatch => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      dispatch(authLogout());
-    } else {
-      const expirationDate = new Date(localStorage.getItem('expirationDate'));
-      if (expirationDate > new Date()) {
-        const userId = localStorage.getItem('userId');
-        dispatch(authSuccess(token, userId));
-        dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
-      } else {
-        dispatch(authLogout());
-      }
-    }
+  return {
+    type: actionTypes.INIT_AUTH_CHECK_STATE
   }
 }
