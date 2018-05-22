@@ -27,7 +27,7 @@ export const initPurchase = () => {
     type: actionTypes.INIT_PURCHASE
   }
 }
-
+//using thunk middleware
 export const purchaseBurger = (orderData, token) => {
   return dispatch => {
     dispatch(orderBurgerStart());
